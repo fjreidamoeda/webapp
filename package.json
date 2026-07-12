@@ -1,6 +1,6 @@
 {
     "name": "Fenix",
-    "version": "2026.07.11.2241",
+    "version": "2026.07.11.2250",
     "displayName": "Fenix",
     "cordova": {
         "platforms": ["android"]
