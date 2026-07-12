@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.totalmente.fenix" version="2026.07.11.2226" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Fenix</name>
+    <description>opooo</description>
+    <author email="" href="">WebRobot</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="*" />
+    <preference name="loadUrlTimeoutValue" value="70000" />
+    <preference name="AndroidInsecureFileModeEnabled" value="true" />
+</widget>
