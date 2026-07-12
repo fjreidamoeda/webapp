@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,17 +20,34 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
+      - name: Accept Android licenses
+        run: yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
+      - name: Install Gradle
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
+          unzip -q gradle-8.5-bin.zip
+          echo "$GITHUB_WORKSPACE/gradle-8.5/bin" >> $GITHUB_PATH
+          echo "GRADLE_HOME=$GITHUB_WORKSPACE/gradle-8.5" >> $GITHUB_ENV
       - name: Install Cordova
         run: npm install -g cordova
       - name: Install dependencies
         run: npm install
       - name: Add Android platform
         run: npx cordova platform add android@12 --no-telemetry
+      - name: Fix Gradle wrapper
+        run: |
+          cd platforms/android
+          rm -rf gradle/wrapper gradlew gradlew.bat
+          gradle wrapper --gradle-version 8.2
+          chmod +x gradlew
       - name: Build debug APK
         run: npx cordova build android --no-telemetry
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            platforms/android/app/build/outputs/apk/debug/app-debug.apk
+            platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: warn
